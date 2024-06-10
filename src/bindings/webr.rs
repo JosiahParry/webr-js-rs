@@ -1,3 +1,4 @@
+use js_sys::JsString;
 use wasm_bindgen::prelude::*;
 
 #[wasm_bindgen(module = "https://webr.r-wasm.org/latest/webr.mjs")]
@@ -21,8 +22,8 @@ extern "C" {
     #[wasm_bindgen(method, catch, js_name = "installPackages")]
     pub async fn install_package(this: &WebR, packages: Vec<String>) -> Result<(), JsValue>;
 
-    #[wasm_bindgen(method, catch, js_name = "evalR")]
-    pub async fn eval_r(this: &WebR, code: String) -> Result<JsValue, JsValue>;
+    #[wasm_bindgen(method, js_name = "evalR")]
+    pub async fn eval_r(this: &WebR, code: String) -> JsValue;
 
     #[wasm_bindgen(method, catch, js_name = "evalRBoolean")]
     pub async fn eval_r_boolean(this: &WebR, code: String) -> Result<JsValue, JsValue>;
@@ -40,7 +41,10 @@ extern "C" {
     pub async fn eval_r_void(this: &WebR, code: String) -> Result<(), JsValue>;
 
     #[wasm_bindgen(method, catch, js_name = "writeConsole")]
-    pub async fn write_console(this: &WebR, input: String) -> Result<(), JsValue>;
+    pub fn write_console(this: &WebR, input: String) -> Result<(), JsValue>;
+
+    #[wasm_bindgen(method, catch, js_name = "read")]
+    pub async fn read(this: &WebR) -> Result<JsValue, JsValue>;
 
     // Missing are:
     // flush
@@ -60,8 +64,10 @@ extern "C" {
 
     #[wasm_bindgen(method, catch, js_class = "FS")]
     pub async fn mount(this: &FS, type_: FSType, mountpoint: String) -> Result<(), JsValue>;
-}
 
+    #[wasm_bindgen(method, js_class = "FS", js_name = "readFile")]
+    pub async fn read_file(this: &FS) -> JsValue;
+}
 /// Note that NODEFS only works under Node JS so it most likely will not work for you
 /// WORKERFS is read only, however? not sure on how you would write to it
 #[wasm_bindgen]
