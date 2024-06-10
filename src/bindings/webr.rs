@@ -19,10 +19,10 @@ extern "C" {
     pub async fn eval_r(this: &WebR, code: String) -> Result<JsValue, JsValue>;
 
     #[wasm_bindgen(method, catch, js_name = "evalRBoolean")]
-    pub async fn eval_r_boolean(this: &WebR, code: String) -> Result<bool, JsValue>;
+    pub async fn eval_r_boolean(this: &WebR, code: String) -> Result<JsValue, JsValue>;
 
     #[wasm_bindgen(method, catch, js_name = "evalRNumber")]
-    pub async fn eval_r_number(this: &WebR, code: String) -> Result<f64, JsValue>;
+    pub async fn eval_r_number(this: &WebR, code: String) -> Result<JsValue, JsValue>;
 
     #[wasm_bindgen(method, catch, js_name = "evalRRaw")]
     pub async fn eval_r_raw(this: &WebR, code: String) -> Result<JsValue, JsValue>;
