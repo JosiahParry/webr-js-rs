@@ -15,9 +15,23 @@ extern "C" {
     #[wasm_bindgen(method, catch, js_name = "installPackages")]
     pub async fn install_package(this: &WebR, packages: Vec<String>) -> Result<(), JsValue>;
 
+    #[wasm_bindgen(method, catch, js_name = "evalR")]
+    pub async fn eval_r(this: &WebR, code: String) -> Result<JsValue, JsValue>;
+
+    #[wasm_bindgen(method, catch, js_name = "evalRBoolean")]
+    pub async fn eval_r_boolean(this: &WebR, code: String) -> Result<bool, JsValue>;
+
+    #[wasm_bindgen(method, catch, js_name = "evalRNumber")]
+    pub async fn eval_r_number(this: &WebR, code: String) -> Result<f64, JsValue>;
+
+    #[wasm_bindgen(method, catch, js_name = "evalRRaw")]
+    pub async fn eval_r_raw(this: &WebR, code: String) -> Result<JsValue, JsValue>;
+
     #[wasm_bindgen(method, catch, js_name = "evalRString")]
     pub async fn eval_r_string(this: &WebR, code: String) -> Result<JsValue, JsValue>;
 
+    #[wasm_bindgen(method, catch, js_name = "evalRVoid")]
+    pub async fn eval_r_void(this: &WebR, code: String) -> Result<(), JsValue>;
 }
 
 #[wasm_bindgen]
