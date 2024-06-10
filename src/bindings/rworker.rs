@@ -2,7 +2,7 @@ use wasm_bindgen::prelude::*;
 
 #[wasm_bindgen]
 extern "C" {
-    #[derive(Debug, Clone)]
+    #[derive(Debug, Clone, Copy)]
     pub type RObjectBase;
 
     #[wasm_bindgen(constructor, js_namespace = "RWorker")]
