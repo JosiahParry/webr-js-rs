@@ -1,4 +1,3 @@
-use js_sys::JsString;
 use wasm_bindgen::prelude::*;
 
 #[wasm_bindgen(module = "https://webr.r-wasm.org/latest/webr.mjs")]
@@ -22,8 +21,8 @@ extern "C" {
     #[wasm_bindgen(method, catch, js_name = "installPackages")]
     pub async fn install_package(this: &WebR, packages: Vec<String>) -> Result<(), JsValue>;
 
-    #[wasm_bindgen(method, js_name = "evalR")]
-    pub async fn eval_r(this: &WebR, code: String) -> JsValue;
+    #[wasm_bindgen(method, catch, js_name = "evalR")]
+    pub async fn eval_r(this: &WebR, code: String) -> Result<JsValue, JsValue>;
 
     #[wasm_bindgen(method, catch, js_name = "evalRBoolean")]
     pub async fn eval_r_boolean(this: &WebR, code: String) -> Result<JsValue, JsValue>;
