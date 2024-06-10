@@ -10,6 +10,12 @@ extern "C" {
     pub fn new() -> WebR;
 
     #[wasm_bindgen(method, catch)]
+    pub async fn close(this: &WebR) -> Result<(), JsValue>;
+
+    #[wasm_bindgen(method, catch)]
+    pub async fn destroy(this: &WebR, x: JsValue) -> Result<(), JsValue>;
+
+    #[wasm_bindgen(method, catch)]
     pub async fn init(this: &WebR) -> Result<(), JsValue>;
 
     #[wasm_bindgen(method, catch, js_name = "installPackages")]
@@ -32,6 +38,17 @@ extern "C" {
 
     #[wasm_bindgen(method, catch, js_name = "evalRVoid")]
     pub async fn eval_r_void(this: &WebR, code: String) -> Result<(), JsValue>;
+
+    #[wasm_bindgen(method, catch, js_name = "writeConsole")]
+    pub async fn write_console(this: &WebR, input: String) -> Result<(), JsValue>;
+
+    // Missing are:
+    // flush
+    // interrupt -- doesn't work anyways b/c postmessage
+    // read
+    // writte
+    // invokeWasmFunction
+
 }
 
 #[wasm_bindgen]
