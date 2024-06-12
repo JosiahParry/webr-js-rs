@@ -1,4 +1,4 @@
-use wasm_bindgen::JsValue;
+use wasm_bindgen::{convert::VectorFromWasmAbi, JsValue};
 use wasm_bindgen_test::*;
 use webr_js_rs::*;
 
@@ -43,12 +43,18 @@ async fn eval_r_number() {
 // }
 
 #[wasm_bindgen_test]
-async fn test() {
+async fn test_write_read() {
+    // create a new instance
     let webr = crate::webr::WebR::new();
+    // instantiate webR
     let _ = webr.init().await;
-    let _ = webr.write_console("rnorm(100)".into());
-    let _ = webr.flush().await.unwrap();
 
-    let res = webr.read_all_stdout().await;
-    web_sys::console::log_1(&JsValue::from_str(&format!("{:?}", res)));
+    // write to the console
+    let _ = webr.write_console("rnorm(100)".into());
+
+    // flush the console and read the output
+    let res = webr.flush_and_read().await;
+    res.iter().for_each(|x| {
+        web_sys::console::log_1(&JsValue::from_str(x));
+    });
 }
