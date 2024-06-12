@@ -1,3 +1,4 @@
+use wasm_bindgen::JsValue;
 use wasm_bindgen_test::*;
 use webr_js_rs::*;
 
@@ -33,18 +34,28 @@ async fn eval_r_number() {
 
 // This causes a WebR error
 // TypeError: Cannot read properties of undefined (reading 'evalR')
-#[wasm_bindgen_test]
-async fn eval_r() {
-    let webr = crate::webr::WebR::new();
-    let res = webr.eval_r("1+1".into()).await.unwrap();
-    web_sys::console::log_1(&res);
-}
-
-// This causes a WebR error
 // #[wasm_bindgen_test]
-// async fn eval_r_raw() {
+// async fn eval_r() {
 //     let webr = crate::webr::WebR::new();
-//     let _ = webr.init().await;
-//     let res = webr.eval_r_raw("1+1".into()).await.unwrap();
+//     let res = webr.eval_r("1+1".into()).await.unwrap();
 //     web_sys::console::log_1(&res);
 // }
+
+#[wasm_bindgen_test]
+async fn test() {
+    let webr = crate::webr::WebR::new();
+    let _ = webr.init().await;
+    let _ = webr.write_console("rnorm(100)".into());
+    let _ = webr.flush().await.unwrap();
+
+    loop {
+        let res = webr.read().await;
+
+        let res = serde_wasm_bindgen::from_value::<Message>(res.unwrap()).unwrap();
+        web_sys::console::log_1(&JsValue::from_str(&res.data));
+
+        if &res.data == "> " {
+            break;
+        }
+    }
+}

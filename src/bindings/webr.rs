@@ -45,14 +45,40 @@ extern "C" {
     #[wasm_bindgen(method, catch, js_name = "read")]
     pub async fn read(this: &WebR) -> Result<JsValue, JsValue>;
 
-    // Missing are:
-    // flush
-    // interrupt -- doesn't work anyways b/c postmessage
-    // read
-    // writte
-    // invokeWasmFunction
+    #[wasm_bindgen(method, catch, js_name = "flush")]
+    pub async fn flush(this: &WebR) -> Result<JsValue, JsValue>;
 
+    // Missing are:
+    // interrupt -- doesn't work anyways b/c postmessage
+    // write
+    // invokeWasmFunction
 }
+
+#[derive(serde::Deserialize, serde::Serialize, Debug, Clone)]
+pub struct Message {
+    #[serde(rename = "type")]
+    pub type_: String,
+    pub data: String,
+}
+
+// #[wasm_bindgen]
+// extern "C" {
+//     #[wasm_bindgen(method, js_name = "flush")]
+//     pub async fn flush(this: &WebR) -> Message;
+// }
+// #[wasm_bindgen]
+// pub struct PagerMessage {
+//     type_: String,
+//     data: PagerMessageData,
+// }
+
+// #[wasm_bindgen]
+// pub struct PagerMessageData {
+//     path: String,
+//     header: String,
+//     title: String,
+//     delete_file: bool,
+// }
 
 #[wasm_bindgen]
 extern "C" {
