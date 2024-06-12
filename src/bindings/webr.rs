@@ -61,6 +61,32 @@ pub struct Message {
     pub data: String,
 }
 
+impl WebR {
+    /// Reads all stdout messages until it reaches the prompt
+    /// The results are stored as a vector of strings.
+    pub async fn read_all_stdout(&self) -> Vec<String> {
+        let mut res = vec![];
+        loop {
+            let msg = self.read().await.unwrap();
+            let msg: Message = serde_wasm_bindgen::from_value(msg).unwrap();
+
+            if msg.data == "> " {
+                break;
+            } else {
+                res.push(msg.data);
+            }
+        }
+        res
+    }
+
+    /// Flushes the stdout buffer and reads all messages until it
+    /// reaches the prompt
+    pub async fn flush_and_read(&self) -> Vec<String> {
+        let _ = self.flush().await.unwrap();
+        self.read_all_stdout().await
+    }
+}
+
 // #[wasm_bindgen]
 // extern "C" {
 //     #[wasm_bindgen(method, js_name = "flush")]

@@ -37,6 +37,7 @@ async fn eval_r_number() {
 // #[wasm_bindgen_test]
 // async fn eval_r() {
 //     let webr = crate::webr::WebR::new();
+//     let _ = webr.init().await;
 //     let res = webr.eval_r("1+1".into()).await.unwrap();
 //     web_sys::console::log_1(&res);
 // }
@@ -48,14 +49,6 @@ async fn test() {
     let _ = webr.write_console("rnorm(100)".into());
     let _ = webr.flush().await.unwrap();
 
-    loop {
-        let res = webr.read().await;
-
-        let res = serde_wasm_bindgen::from_value::<Message>(res.unwrap()).unwrap();
-        web_sys::console::log_1(&JsValue::from_str(&res.data));
-
-        if &res.data == "> " {
-            break;
-        }
-    }
+    let res = webr.read_all_stdout().await;
+    web_sys::console::log_1(&JsValue::from_str(&format!("{:?}", res)));
 }
