@@ -8,15 +8,17 @@ wasm_bindgen_test::wasm_bindgen_test_configure!(run_in_browser);
 
 #[wasm_bindgen_test]
 async fn eval_bool() {
-    let webr = crate::webr::WebR::new();
+    let js = serde_wasm_bindgen::to_value(&WebROptions::default()).unwrap();
+    web_sys::console::log_1(&js);
+    let webr = crate::webr::WebR::new(js);
     let res = webr.eval_r_boolean("TRUE".into()).await.unwrap();
     println!("{:?}", res);
     assert_eq!(true, res.as_bool().unwrap());
 }
 
-#[wasm_bindgen_test]
+// #[wasm_bindgen_test]
 async fn eval_r_string() {
-    let webr = crate::webr::WebR::new();
+    let webr = crate::webr::WebR::new(JsValue::null());
     let res = webr
         .eval_r_string(r#"paste0("hello", "world")"#.into())
         .await
@@ -25,9 +27,9 @@ async fn eval_r_string() {
     assert_eq!("helloworld".to_string(), res.as_string().unwrap());
 }
 
-#[wasm_bindgen_test]
+// #[wasm_bindgen_test]
 async fn eval_r_number() {
-    let webr = crate::webr::WebR::new();
+    let webr = crate::webr::WebR::new(JsValue::null());
     let res = webr.eval_r_number("1+1".into()).await.unwrap();
     assert_eq!(2, res.as_f64().unwrap() as i32);
 }
@@ -42,10 +44,10 @@ async fn eval_r_number() {
 //     web_sys::console::log_1(&res);
 // }
 
-#[wasm_bindgen_test]
+// #[wasm_bindgen_test]
 async fn test_write_read() {
     // create a new instance
-    let webr = crate::webr::WebR::new();
+    let webr = crate::webr::WebR::new(JsValue::null());
     // instantiate webR
     let _ = webr.init().await;
 

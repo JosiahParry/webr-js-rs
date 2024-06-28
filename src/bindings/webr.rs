@@ -1,13 +1,26 @@
 use wasm_bindgen::prelude::*;
 
-#[wasm_bindgen(module = "https://webr.r-wasm.org/latest/webr.mjs")]
+#[derive(Clone, serde::Serialize, serde::Deserialize, Debug, Default)]
+#[serde(rename_all = "camelCase")]
+pub struct WebROptions {
+    #[serde(rename = "RArgs")]
+    pub r_args: Option<Vec<String>>,
+    // pub base_url: Option<String>,
+    // pub channel_type: Option<String>,
+    // pub create_lazy_filesystem: Option<bool>,
+    // pub interactive: Option<bool>,
+    // pub repo_url: Option<String>,
+    // pub service_worker_url: Option<String>,
+}
+
+#[wasm_bindgen(module = "https://webr.r-wasm.org/v0.3.3/webr.mjs")]
 extern "C" {
-    #[derive(Debug, Clone)]
+    #[derive(Debug, Clone, PartialEq)]
     #[wasm_bindgen(js_name = WebR)]
     pub type WebR;
 
     #[wasm_bindgen(constructor)]
-    pub fn new() -> WebR;
+    pub fn new(options: JsValue) -> WebR;
 
     #[wasm_bindgen(method, catch)]
     pub async fn close(this: &WebR) -> Result<(), JsValue>;
@@ -62,6 +75,22 @@ pub struct Message {
 }
 
 impl WebR {
+    // Create a new WebR instance with default options
+    pub fn default() -> WebR {
+        let opts = serde_wasm_bindgen::to_value(&WebROptions::default()).unwrap();
+        WebR::new(opts)
+    }
+
+    /// Starts an instance of WebR with the `--quiet` flag
+    pub fn shhh() -> WebR {
+        let opts = serde_wasm_bindgen::to_value(&WebROptions {
+            r_args: Some(vec!["--quiet".into()]),
+            ..Default::default()
+        })
+        .unwrap();
+        WebR::new(opts)
+    }
+
     /// Reads all stdout messages until it reaches the prompt
     /// The results are stored as a vector of strings.
     pub async fn read_all_stdout(&self) -> Vec<String> {
@@ -87,25 +116,6 @@ impl WebR {
     }
 }
 
-// #[wasm_bindgen]
-// extern "C" {
-//     #[wasm_bindgen(method, js_name = "flush")]
-//     pub async fn flush(this: &WebR) -> Message;
-// }
-// #[wasm_bindgen]
-// pub struct PagerMessage {
-//     type_: String,
-//     data: PagerMessageData,
-// }
-
-// #[wasm_bindgen]
-// pub struct PagerMessageData {
-//     path: String,
-//     header: String,
-//     title: String,
-//     delete_file: bool,
-// }
-
 #[wasm_bindgen]
 extern "C" {
     pub type FS;
@@ -126,13 +136,3 @@ pub enum FSType {
     NODEFS = "NODEFS",
     WORKERFS = "WORKERFS",
 }
-
-// #[derive(Debug, Clone)]
-// #[wasm_bindgen]
-// pub struct FSMountOptions {
-//     root: String,
-//     // Ommiting these for simplicity right now
-//     // blobs: Option<Vec<BlobData>>,
-//     // files: Option<Vec<JsValue>>, // File or FileList
-//     // packages: Option<Vec<PackageData>>,
-// }
