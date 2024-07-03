@@ -13,7 +13,7 @@ pub struct WebROptions {
     // pub service_worker_url: Option<String>,
 }
 
-#[wasm_bindgen(module = "https://webr.r-wasm.org/v0.3.3/webr.mjs")]
+#[wasm_bindgen(module = "https://webr.r-wasm.org/v0.4.0/webr.mjs")]
 extern "C" {
     #[derive(Debug, Clone, PartialEq)]
     #[wasm_bindgen(js_name = WebR)]
